@@ -10,3 +10,5 @@ services:
     arguments:
       - '@symfony.component.http.client.curl'
       - '@pixel.cloudflare.config'
+  symfony.component.http.client.curl:
+    class: 'Symfony\Component\HttpClient\CurlHttpClient'
