@@ -1,0 +1,8 @@
+{% for button in buttons %}
+<a class="{{ button.class }}" href="{{ path(button.route) }}">
+    {% if button.icon %}
+        <i class="material-icons">{{ button.icon }}</i>
+    {% endif %}
+    {{ button.label }}
+</a>
+{% endfor %}

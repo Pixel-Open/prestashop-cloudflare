@@ -1,0 +1,5 @@
+admin_cloudflare_clear_cache:
+  path: /cloudflare/clearCache
+  methods: [GET]
+  defaults:
+    _controller: 'pixel.cloudflare.controller:clearCacheAction'

@@ -1,0 +1,12 @@
+services:
+  pixel.cloudflare.controller:
+    class: 'Pixel\Module\Cloudflare\Controller\Admin\CloudflareController'
+    arguments:
+      - '@pixel.cloudflare.api'
+  pixel.cloudflare.config:
+    class: 'Pixel\Module\Cloudflare\Helper\Config'
+  pixel.cloudflare.api:
+    class: 'Pixel\Module\Cloudflare\Model\Api'
+    arguments:
+      - '@symfony.component.http.client.curl'
+      - '@pixel.cloudflare.config'
