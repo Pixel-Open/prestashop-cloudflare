@@ -20,7 +20,7 @@ class Pixel_cloudflare extends Module
     public function __construct()
     {
         $this->name = 'pixel_cloudflare';
-        $this->version = '1.0.1';
+        $this->version = '1.1.0';
         $this->author = 'Pixel Open';
         $this->tab = 'administration';
         $this->need_instance = 0;
@@ -42,24 +42,6 @@ class Pixel_cloudflare extends Module
             'min' => '1.7.6.0',
             'max' => _PS_VERSION_,
         ];
-
-        /*
-        $tabNames = [];
-        foreach (Language::getLanguages() as $lang) {
-            $tabNames[$lang['locale']] = 'Cloudflare';
-        }
-        $this->tabs = [
-            [
-                'route_name' => 'admin_clouflare_settings',
-                'class_name' => 'AdminPixelCloudflare',
-                'visible' => true,
-                'name' => $tabNames,
-                'parent_class_name' => 'AdminAdvancedParameters',
-                'wording' => 'Cloudflare',
-                'wording_domain' => 'Modules.Pixelcloudflare.Admin',
-            ],
-        ];
-        */
     }
 
     /***************************/
@@ -149,7 +131,7 @@ class Pixel_cloudflare extends Module
 
         $buttons = [
             [
-                'label' => $this->trans('Flush Cloudflare Cache', [], 'Modules.Pixelcloudflare.Admin'),
+                'label' => $this->trans('Clear Cloudflare Cache', [], 'Modules.Pixelcloudflare.Admin'),
                 'route' => 'admin_cloudflare_clear_cache',
                 'class' => 'btn btn-info',
                 'icon'  => 'delete'
@@ -173,13 +155,6 @@ class Pixel_cloudflare extends Module
     protected function getConfigFields(): array
     {
         return [
-            'CLOUDFLARE_API_KEY' => [
-                'type'     => 'text',
-                'label'    => $this->trans('API Key', [], 'Modules.Pixelcloudflare.Admin'),
-                'name'     => 'CLOUDFLARE_API_KEY',
-                'size'     => 20,
-                'required' => true,
-            ],
             'CLOUDFLARE_ZONE_ID' => [
                 'type'     => 'text',
                 'label'    => $this->trans('Zone ID', [], 'Modules.Pixelcloudflare.Admin'),
@@ -187,12 +162,51 @@ class Pixel_cloudflare extends Module
                 'size'     => 20,
                 'required' => true,
             ],
+            'CLOUDFLARE_API_AUTHENTICATION_MODE' => [
+                'type'     => 'select',
+                'label'    => $this->trans('Authentication mode', [], 'Modules.Pixelcloudflare.Admin'),
+                'name'     => 'CLOUDFLARE_API_AUTHENTICATION_MODE',
+                'required' => true,
+                'options' => [
+                    'query' => [
+                        [
+                            'value' => 'api_token',
+                            'name'  => $this->trans('API Token', [], 'Modules.Pixelcloudflare.Admin'),
+                        ],
+                        [
+                            'value' => 'api_key',
+                            'name'  => $this->trans('Global API Key', [], 'Modules.Pixelcloudflare.Admin'),
+                        ],
+                    ],
+                    'id'   => 'value',
+                    'name' => 'name',
+                ],
+            ],
+            'CLOUDFLARE_API_TOKEN' => [
+                'type'     => 'text',
+                'label'    => $this->trans('API Token', [], 'Modules.Pixelcloudflare.Admin'),
+                'name'     => 'CLOUDFLARE_API_TOKEN',
+                'size'     => 20,
+                'required' => false,
+                'desc'     => $this->trans(
+                    'A valid token from your Cloudflare Account with permission on "Cache Purge" for "Zone".',
+                    [],
+                    'Modules.Pixelcloudflare.Admin'
+                ),
+            ],
+            'CLOUDFLARE_API_KEY' => [
+                'type'     => 'text',
+                'label'    => $this->trans('Global API Key', [], 'Modules.Pixelcloudflare.Admin'),
+                'name'     => 'CLOUDFLARE_API_KEY',
+                'size'     => 20,
+                'required' => false,
+            ],
             'CLOUDFLARE_ACCOUNT_EMAIL' => [
                 'type'     => 'text',
                 'label'    => $this->trans('Account Email', [], 'Modules.Pixelcloudflare.Admin'),
                 'name'     => 'CLOUDFLARE_ACCOUNT_EMAIL',
                 'size'     => 20,
-                'required' => true,
+                'required' => false,
             ]
         ];
     }
@@ -207,14 +221,17 @@ class Pixel_cloudflare extends Module
         $output = '';
 
         if (Tools::isSubmit('submit' . $this->name)) {
-            foreach ($this->getConfigFields() as $field) {
-                $value = (string) Tools::getValue($field['name']);
+            foreach ($this->getConfigFields() as $code => $field) {
+                $value = Tools::getValue($field['name']);
                 if ($field['required'] && empty($value)) {
                     return $this->displayError(
-                        $this->trans('%field% is empty', ['%field%' => $field['label']], 'Modules.Pixelcloudflare.Admin')
-                    ) . $this->displayForm();
+                            $this->trans('%field% is empty', ['%field%' => $field['label']], 'Modules.Pixelcloudflare.Admin')
+                        ) . $this->displayForm();
                 }
-                Configuration::updateValue($field['name'], $value);
+                if ($value && ($field['multiple'] ?? false) === true) {
+                    $value = join(',', $value);
+                }
+                Configuration::updateValue($code, $value);
             }
 
             $output = $this->displayConfirmation($this->trans('Settings updated', [], 'Modules.Pixelcloudflare.Admin'));
@@ -253,14 +270,18 @@ class Pixel_cloudflare extends Module
 
         $helper->default_form_language = (int) Configuration::get('PS_LANG_DEFAULT');
 
-        foreach ($this->getConfigFields() as $field) {
-            $helper->fields_value[$field['name']] = Tools::getValue(
-                $field['name'],
-                Configuration::get($field['name'])
-            );
+        foreach ($this->getConfigFields() as $code => $field) {
+            $value = Tools::getValue($code, Configuration::get($code));
+            if (!is_array($value) && ($field['multiple'] ?? false) === true) {
+                $value = explode(',', $value);
+            }
+            $helper->fields_value[$field['name']] = $value;
         }
 
-        return $helper->generateForm([$form]);
+        $form = $helper->generateForm([$form]);
+        $script = $this->get('twig')->render('@Modules/pixel_cloudflare/views/templates/admin/config/js.twig');
+
+        return $form . $script;
     }
 
     /**

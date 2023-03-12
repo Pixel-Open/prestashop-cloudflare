@@ -1,0 +1,46 @@
+<script type="text/javascript">
+    const cloudflareConfig = {
+        apiToken: document.getElementById("CLOUDFLARE_API_TOKEN"),
+        apiKey: document.getElementById("CLOUDFLARE_API_KEY"),
+        accountEmail: document.getElementById("CLOUDFLARE_ACCOUNT_EMAIL"),
+        authMode: document.getElementById("CLOUDFLARE_API_AUTHENTICATION_MODE"),
+
+        init: function () {
+            this.disable();
+            this.toggle(this.authMode.value);
+
+            this.authMode.addEventListener('change', function (event) {
+                this.toggle(event.target.value);
+            }.bind(this), false);
+        },
+
+        toggle: function (value) {
+            this.disable();
+
+            if (value === 'api_token') {
+                this.show(this.apiToken);
+            }
+            if (value === 'api_key') {
+                this.show(this.apiKey);
+                this.show(this.accountEmail);
+            }
+        },
+
+        disable: function () {
+            let inputs = [this.apiToken, this.apiKey, this.accountEmail];
+            for (let i = 0; i < inputs.length; i++) {
+                this.hide(inputs[i]);
+            }
+        },
+
+        show: function (element) {
+            element.parentNode.parentNode.style.display = "block";
+        },
+
+        hide: function (element) {
+            element.parentNode.parentNode.style.display = "none";
+        }
+    };
+
+    cloudflareConfig.init();
+</script>

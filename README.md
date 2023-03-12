@@ -8,7 +8,7 @@
 
 Cloudflare API features in Prestashop:
 
-- Flush Cloudflare Cache in the Prestashop admin
+- Clear Cloudflare Cache in the Prestashop admin
 
 ![Flush Cloudflare Cache](screenshot.png)
 
@@ -33,15 +33,21 @@ Move the downloaded file in the Prestashop **modules** directory and unzip the a
 
 From the module manager, find the module and click on configure.
 
-| Field         | Description                                           | Required |
-|:--------------|:------------------------------------------------------|----------|
-| API Key       | The Cloudflare global API key                         | Y        |
-| Zone ID       | The website Zone ID                                   | Y        |
-| Account Email | Email address associated with your Cloudflare account | Y        |
+| Field               | Description                                                                            | Required |
+|:--------------------|:---------------------------------------------------------------------------------------|----------|
+| Zone ID             | The website Zone ID                                                                    | Y        |
+| Authentication mode | The authentication mode: API Token or Global API key                                   | Y        |
+| API Token *         | A valid token from your Cloudflare Account with permission on "Cache Purge" for "Zone" | Y        |
+| Global API Key      | The Cloudflare Global API key                                                          | Y        |
+| Account Email       | Email address associated with your Cloudflare account                                  | Y        |
 
-## Flush the cache
+\* For an API Token authentication (more secure), create a new custom API token with permission on "Cache Purge" for "Zone":
+
+![Flush Cloudflare Cache](token.png)
+
+## Clear the cache
 
 In admin, go to *Advanced settings > Performance*
 
-- Clear only Cloudflare cache with the button: **Flush Cloudflare Cache**
+- Clear only Cloudflare cache with the button: **Clear Cloudflare Cache**
 - Clear prestashop and Cloudflare cache with the button: **Clear cache**

@@ -75,8 +75,21 @@ class Api
      */
     public function execute(string $method, string $path, array $body = []): array
     {
-        if (!($this->config->getApiKey() && $this->config->getEmail())) {
-            return $this->internalError('An API parameter is missing in the module configuration');
+        if ($this->config->getAuthMode() === 'api_key' && $this->config->getApiKey() && $this->config->getEmail()) {
+            $headers = [
+                'X-Auth-Key'   => $this->config->getApiKey(),
+                'X-Auth-Email' => $this->config->getEmail()
+            ];
+        }
+
+        if ($this->config->getAuthMode() === 'api_token' && $this->config->getApiToken()) {
+            $headers = [
+                'Authorization' => 'Bearer ' . $this->config->getApiToken()
+            ];
+        }
+
+        if (empty($headers)) {
+            return $this->internalError('Please set API connection parameters in module configuration');
         }
 
         $response = $this->client->request(
@@ -84,10 +97,7 @@ class Api
             $this->config->getApiUrl() . $path,
             [
                 'body'    => json_encode($body),
-                'headers' => [
-                    'X-Auth-Key'   => $this->config->getApiKey(),
-                    'X-Auth-Email' => $this->config->getEmail()
-                ]
+                'headers' => $headers
             ]
         );
 

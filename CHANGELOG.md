@@ -1,3 +1,7 @@
+## 1.1.0
+
+- API Token authentication
+
 ## 1.0.1
 
 - Fix missing service for symfony http client

@@ -23,6 +23,26 @@ class Config
     }
 
     /**
+     * Retrieve Authentication mode
+     *
+     * @return string|null
+     */
+    public function getAuthMode(): ?string
+    {
+        return Configuration::get('CLOUDFLARE_API_AUTHENTICATION_MODE') ?: null;
+    }
+
+    /**
+     * Retrieve API token
+     *
+     * @return string|null
+     */
+    public function getApiToken(): ?string
+    {
+        return Configuration::get('CLOUDFLARE_API_TOKEN') ?: null;
+    }
+
+    /**
      * Retrieve API key
      *
      * @return string|null
