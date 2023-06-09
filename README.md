@@ -9,6 +9,7 @@
 Cloudflare API features in Prestashop:
 
 - Clear Cloudflare Cache in the Prestashop admin
+- Update settings: Auto Minify (CSS, JS, HTML)
 
 ![Flush Cloudflare Cache](screenshot.png)
 
@@ -33,15 +34,20 @@ Move the downloaded file in the Prestashop **modules** directory and unzip the a
 
 From the module manager, find the module and click on configure.
 
-| Field               | Description                                                                            | Required |
-|:--------------------|:---------------------------------------------------------------------------------------|----------|
-| Zone ID             | The website Zone ID                                                                    | Y        |
-| Authentication mode | The authentication mode: API Token or Global API key                                   | Y        |
-| API Token *         | A valid token from your Cloudflare Account with permission on "Cache Purge" for "Zone" | Y        |
-| Global API Key      | The Cloudflare Global API key                                                          | Y        |
-| Account Email       | Email address associated with your Cloudflare account                                  | Y        |
+| Field                | Description                                                                            | Required |
+|:---------------------|:---------------------------------------------------------------------------------------|----------|
+| Zone ID              | The website Zone ID                                                                    | Y        |
+| Authentication mode  | The authentication mode: API Token or Global API key                                   | Y        |
+| API Token *          | A valid token from your Cloudflare Account with permission on "Cache Purge" for "Zone" | Y        |
+| Global API Key       | The Cloudflare Global API key                                                          | Y        |
+| Account Email        | Email address associated with your Cloudflare account                                  | Y        |
+| Automatically minify | Reduce the file size of source code on your website                                    | N        |
 
-\* For an API Token authentication (more secure), create a new custom API token with permission on "Cache Purge" for "Zone":
+\* For an API Token authentication (more secure), create a new custom API token with permissions on:
+
+- Zone - Cache Purge - Purge
+- Zone - Zone Settings - Edit
+- Zone - Zone Settings - Read
 
 ![Flush Cloudflare Cache](token.png)
 
