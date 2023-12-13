@@ -39,6 +39,58 @@ class Api
     }
 
     /**
+     * Retrieve minifier settings
+     *
+     * @return array
+     */
+    public function GetMinifySetting(): array
+    {
+        if (!$this->config->getZoneId()) {
+            return $this->internalError('The Zone ID parameter is missing in the module configuration');
+        }
+
+        try {
+            return $this->execute(
+                'GET',
+                'zones/' . $this->config->getZoneId() . '/settings/minify'
+            );
+        } catch (Throwable $throwable) {
+            return $this->internalError($throwable->getMessage());
+        }
+    }
+
+    /**
+     * Patch Minify Setting
+     *
+     * @param array $values
+     * @return array
+     */
+    public function patchMinifySetting(array $values): array
+    {
+        if (!$this->config->getZoneId()) {
+            return $this->internalError('The Zone ID parameter is missing in the module configuration');
+        }
+
+        $types = ['js' => 'off', 'css' => 'off', 'html' => 'off'];
+        foreach ($values as $type) {
+            if (!isset($types[$type])) {
+                continue;
+            }
+            $types[$type] = 'on';
+        }
+
+        try {
+            return $this->execute(
+                'PATCH',
+                'zones/' . $this->config->getZoneId() . '/settings/minify',
+                ['value' => $types]
+            );
+        } catch (Throwable $throwable) {
+            return $this->internalError($throwable->getMessage());
+        }
+    }
+
+    /**
      * Clear the cache
      *
      * @return array
@@ -63,11 +115,11 @@ class Api
     /**
      * Execute api method
      *
-     * @param string  $method
-     * @param string  $path
-     * @param mixed[] $body
+     * @param string $method
+     * @param string $path
+     * @param array  $body
      *
-     * @return mixed[]
+     * @return array
      * @throws TransportExceptionInterface
      * @throws RedirectionExceptionInterface
      * @throws ClientExceptionInterface
@@ -92,11 +144,15 @@ class Api
             return $this->internalError('Please set API connection parameters in module configuration');
         }
 
+        if (!empty($body)) {
+            $headers['content-type'] = 'application/json';
+        }
+
         $response = $this->client->request(
             $method,
             $this->config->getApiUrl() . $path,
             [
-                'body'    => json_encode($body),
+                'body'    => !empty($body) ? json_encode($body) : '',
                 'headers' => $headers
             ]
         );

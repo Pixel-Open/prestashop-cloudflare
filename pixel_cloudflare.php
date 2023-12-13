@@ -9,7 +9,9 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+use Pixel\Module\Cloudflare\Model\Api;
 use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeProviderInterface;
+use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
 use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 
 class Pixel_cloudflare extends Module
@@ -20,7 +22,7 @@ class Pixel_cloudflare extends Module
     public function __construct()
     {
         $this->name = 'pixel_cloudflare';
-        $this->version = '1.1.0';
+        $this->version = '1.2.0';
         $this->author = 'Pixel Open';
         $this->tab = 'administration';
         $this->need_instance = 0;
@@ -207,6 +209,38 @@ class Pixel_cloudflare extends Module
                 'name'     => 'CLOUDFLARE_ACCOUNT_EMAIL',
                 'size'     => 20,
                 'required' => false,
+            ],
+            'API_AUTOMATICALLY_MINIFY' => [
+                'type'     => 'select',
+                'multiple' => true,
+                'label'    => $this->trans('Automatically minify', [], 'Modules.Pixelcloudflare.Admin'),
+                'name'     => 'API_AUTOMATICALLY_MINIFY[]',
+                'required' => false,
+                'options' => [
+                    'query' => [
+                        [
+                            'value' => 'js',
+                            'name'  => $this->trans('JavaScript', [], 'Modules.Pixelcloudflare.Admin'),
+                        ],
+                        [
+                            'value' => 'css',
+                            'name'  => $this->trans('CSS', [], 'Modules.Pixelcloudflare.Admin'),
+                        ],
+                        [
+                            'value' => 'html',
+                            'name'  => $this->trans('HTML', [], 'Modules.Pixelcloudflare.Admin'),
+                        ],
+                    ],
+                    'id'   => 'value',
+                    'name' => 'name',
+                ],
+                'desc' => Configuration::get('CLOUDFLARE_API_AUTHENTICATION_MODE') === 'api_token' ?
+                    $this->trans(
+                    'A valid token with permission on "Zone Settings" for "Zone" is required (Read and Edit).',
+                    [],
+                    'Modules.Pixelcloudflare.Admin'
+                    ) : ''
+                ,
             ]
         ];
     }
@@ -215,14 +249,28 @@ class Pixel_cloudflare extends Module
      * This method handles the module's configuration page
      *
      * @return string
+     * @throws ContainerNotFoundException
      */
     public function getContent(): string
     {
         $output = '';
 
+        /** @var Api $api */
+        $api = $this->getContainer()->get('pixel.cloudflare.api');
+
         if (Tools::isSubmit('submit' . $this->name)) {
             foreach ($this->getConfigFields() as $code => $field) {
-                $value = Tools::getValue($field['name']);
+                $value = Tools::getValue($code);
+
+                // Cloudflare API settings
+                if ($code === 'API_AUTOMATICALLY_MINIFY') {
+                    if (is_array($value)) {
+                        $api->patchMinifySetting($value);
+                    }
+                    continue;
+                }
+
+                // Prestashop settings
                 if ($field['required'] && empty($value)) {
                     return $this->displayError(
                             $this->trans('%field% is empty', ['%field%' => $field['label']], 'Modules.Pixelcloudflare.Admin')
@@ -244,6 +292,7 @@ class Pixel_cloudflare extends Module
      * Builds the configuration form
      *
      * @return string
+     * @throws ContainerNotFoundException
      */
     public function displayForm(): string
     {
@@ -270,11 +319,28 @@ class Pixel_cloudflare extends Module
 
         $helper->default_form_language = (int) Configuration::get('PS_LANG_DEFAULT');
 
+        /** @var Api $api */
+        $api = $this->getContainer()->get('pixel.cloudflare.api');
+
         foreach ($this->getConfigFields() as $code => $field) {
+            // Prestashop settings
             $value = Tools::getValue($code, Configuration::get($code));
+
             if (!is_array($value) && ($field['multiple'] ?? false) === true) {
-                $value = explode(',', $value);
+                $value = explode(',', (string)$value);
             }
+
+            // Cloudflare API settings
+            if ($code === 'API_AUTOMATICALLY_MINIFY') {
+                $value = [];
+                $result = $api->GetMinifySetting();
+                foreach (($result['result']['value'] ?? []) as $type => $state) {
+                    if (strtolower($state) === 'on') {
+                        $value[] = $type;
+                    }
+                }
+            }
+
             $helper->fields_value[$field['name']] = $value;
         }
 

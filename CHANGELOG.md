@@ -1,3 +1,7 @@
+## 1.2.0
+
+- Allow managing Minify settings
+
 ## 1.1.0
 
 - API Token authentication
