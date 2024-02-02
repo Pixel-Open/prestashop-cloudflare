@@ -1,3 +1,7 @@
+## 1.2.1
+
+- Fix service scopes on Prestashop 8
+
 ## 1.2.0
 
 - Allow managing Minify settings
