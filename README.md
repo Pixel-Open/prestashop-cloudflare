@@ -9,7 +9,6 @@
 Cloudflare API features in Prestashop:
 
 - Clear Cloudflare Cache in the Prestashop admin
-- Update settings: Auto Minify (CSS, JS, HTML)
 
 ![Flush Cloudflare Cache](screenshot.png)
 
@@ -41,7 +40,6 @@ From the module manager, find the module and click on configure.
 | API Token *          | A valid token from your Cloudflare Account with permission on "Cache Purge" for "Zone" | Y        |
 | Global API Key       | The Cloudflare Global API key                                                          | Y        |
 | Account Email        | Email address associated with your Cloudflare account                                  | Y        |
-| Automatically minify | Reduce the file size of source code on your website                                    | N        |
 
 \* For an API Token authentication (more secure), create a new custom API token with permissions on:
 

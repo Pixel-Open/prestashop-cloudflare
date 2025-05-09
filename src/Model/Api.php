@@ -61,6 +61,7 @@ class Api
 
     /**
      * Patch Minify Setting
+     * @deprecated Cloudflare had deprecated the Auto Minify feature on August 5th, 2024
      *
      * @param array $values
      * @return array

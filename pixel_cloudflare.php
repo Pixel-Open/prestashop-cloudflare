@@ -1,6 +1,6 @@
 <?php
 /**
- * Copyright (C) 2023 Pixel Développement
+ * Copyright (C) 2025 Pixel Développement
  *
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
@@ -10,9 +10,7 @@ if (!defined('_PS_VERSION_')) {
 }
 
 use Pixel\Module\Cloudflare\Model\Api;
-use PrestaShop\PrestaShop\Core\Addon\Theme\ThemeProviderInterface;
 use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
-use PrestaShop\PrestaShop\Core\Module\WidgetInterface;
 
 class Pixel_cloudflare extends Module
 {
@@ -22,7 +20,7 @@ class Pixel_cloudflare extends Module
     public function __construct()
     {
         $this->name = 'pixel_cloudflare';
-        $this->version = '1.2.1';
+        $this->version = '1.2.2';
         $this->author = 'Pixel Open';
         $this->tab = 'administration';
         $this->need_instance = 0;
@@ -210,38 +208,6 @@ class Pixel_cloudflare extends Module
                 'size'     => 20,
                 'required' => false,
             ],
-            'API_AUTOMATICALLY_MINIFY' => [
-                'type'     => 'select',
-                'multiple' => true,
-                'label'    => $this->trans('Automatically minify', [], 'Modules.Pixelcloudflare.Admin'),
-                'name'     => 'API_AUTOMATICALLY_MINIFY[]',
-                'required' => false,
-                'options' => [
-                    'query' => [
-                        [
-                            'value' => 'js',
-                            'name'  => $this->trans('JavaScript', [], 'Modules.Pixelcloudflare.Admin'),
-                        ],
-                        [
-                            'value' => 'css',
-                            'name'  => $this->trans('CSS', [], 'Modules.Pixelcloudflare.Admin'),
-                        ],
-                        [
-                            'value' => 'html',
-                            'name'  => $this->trans('HTML', [], 'Modules.Pixelcloudflare.Admin'),
-                        ],
-                    ],
-                    'id'   => 'value',
-                    'name' => 'name',
-                ],
-                'desc' => Configuration::get('CLOUDFLARE_API_AUTHENTICATION_MODE') === 'api_token' ?
-                    $this->trans(
-                    'A valid token with permission on "Zone Settings" for "Zone" is required (Read and Edit).',
-                    [],
-                    'Modules.Pixelcloudflare.Admin'
-                    ) : ''
-                ,
-            ]
         ];
     }
 
@@ -261,14 +227,6 @@ class Pixel_cloudflare extends Module
         if (Tools::isSubmit('submit' . $this->name)) {
             foreach ($this->getConfigFields() as $code => $field) {
                 $value = Tools::getValue($code);
-
-                // Cloudflare API settings
-                if ($code === 'API_AUTOMATICALLY_MINIFY') {
-                    if (is_array($value)) {
-                        $api->patchMinifySetting($value);
-                    }
-                    continue;
-                }
 
                 // Prestashop settings
                 if ($field['required'] && empty($value)) {
@@ -328,17 +286,6 @@ class Pixel_cloudflare extends Module
 
             if (!is_array($value) && ($field['multiple'] ?? false) === true) {
                 $value = explode(',', (string)$value);
-            }
-
-            // Cloudflare API settings
-            if ($code === 'API_AUTOMATICALLY_MINIFY') {
-                $value = [];
-                $result = $api->GetMinifySetting();
-                foreach (($result['result']['value'] ?? []) as $type => $state) {
-                    if (strtolower($state) === 'on') {
-                        $value[] = $type;
-                    }
-                }
             }
 
             $helper->fields_value[$field['name']] = $value;

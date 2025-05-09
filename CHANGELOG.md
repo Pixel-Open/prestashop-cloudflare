@@ -1,3 +1,7 @@
+## 1.2.2
+
+- Deprecated Minify settings removed
+
 ## 1.2.1
 
 - Fix service scopes on Prestashop 8

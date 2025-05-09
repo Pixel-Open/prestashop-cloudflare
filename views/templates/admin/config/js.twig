@@ -4,7 +4,6 @@
         apiKey: document.getElementById("CLOUDFLARE_API_KEY"),
         accountEmail: document.getElementById("CLOUDFLARE_ACCOUNT_EMAIL"),
         authMode: document.getElementById("CLOUDFLARE_API_AUTHENTICATION_MODE"),
-        apiAutomaticallyMinify: document.getElementById("API_AUTOMATICALLY_MINIFY[]"),
 
         init: function () {
             this.disable();
@@ -20,21 +19,15 @@
 
             if (value === 'api_token') {
                 this.show(this.apiToken);
-                if (this.apiToken.value) {
-                    this.show(this.apiAutomaticallyMinify);
-                }
             }
             if (value === 'api_key') {
                 this.show(this.apiKey);
                 this.show(this.accountEmail);
-                if (this.apiKey.value && this.accountEmail.value) {
-                    this.show(this.apiAutomaticallyMinify);
-                }
             }
         },
 
         disable: function () {
-            let inputs = [this.apiToken, this.apiKey, this.accountEmail, this.apiAutomaticallyMinify];
+            let inputs = [this.apiToken, this.apiKey, this.accountEmail];
             for (let i = 0; i < inputs.length; i++) {
                 this.hide(inputs[i]);
             }
