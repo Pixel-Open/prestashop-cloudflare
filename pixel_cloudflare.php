@@ -20,7 +20,7 @@ class Pixel_cloudflare extends Module
     public function __construct()
     {
         $this->name = 'pixel_cloudflare';
-        $this->version = '1.2.2';
+        $this->version = '1.3.0';
         $this->author = 'Pixel Open';
         $this->tab = 'administration';
         $this->need_instance = 0;
@@ -96,12 +96,28 @@ class Pixel_cloudflare extends Module
     {
         try {
             $result = $this->get('pixel.cloudflare.api')->clearCache();
-            foreach (($result['messages'] ?? []) as $message) {
+            foreach (($result['errors'] ?? []) as $error) {
+                if (!isset($error['message'])) {
+                    continue;
+                }
                 PrestaShopLogger::addLog(
-                    $message,
-                    ($result['status'] ?? 0) === 1 ?
-                        PrestaShopLoggerCore::LOG_SEVERITY_LEVEL_INFORMATIVE :
-                        PrestaShopLoggerCore::LOG_SEVERITY_LEVEL_ERROR
+                    (string)$error['message'],
+                    PrestaShopLoggerCore::LOG_SEVERITY_LEVEL_ERROR
+                );
+            }
+            foreach (($result['messages'] ?? []) as $message) {
+                if (!isset($message['message'])) {
+                    continue;
+                }
+                PrestaShopLogger::addLog(
+                    (string)$message['message'],
+                    PrestaShopLoggerCore::LOG_SEVERITY_LEVEL_INFORMATIVE
+                );
+            }
+            if ($result['success'] ?? false) {
+                PrestaShopLogger::addLog(
+                    $this->trans('Cloudflare cache has been flushed', [],'Modules.Pixelcloudflare.Admin'),
+                    PrestaShopLoggerCore::LOG_SEVERITY_LEVEL_INFORMATIVE
                 );
             }
         } catch (Throwable $throwable) {

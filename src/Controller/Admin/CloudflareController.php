@@ -30,8 +30,6 @@ class CloudflareController extends FrameworkBundleAdminController
     public function __construct(Api $api)
     {
         $this->api = $api;
-
-        parent::__construct();
     }
 
     /**
@@ -44,10 +42,10 @@ class CloudflareController extends FrameworkBundleAdminController
         try {
             $result = $this->api->clearCache();
             foreach (($result['errors'] ?? []) as $error) {
-                $this->addMessage('error', $error['message']);
+                $this->addMessage('error', (string)$error['message']);
             }
             foreach (($result['messages'] ?? []) as $message) {
-                $this->addMessage('warning', $message['message']);
+                $this->addMessage('warning', (string)$message['message']);
             }
             if ($result['success'] ?? false) {
                 $this->addMessage('success', 'Cloudflare cache has been flushed');
