@@ -9,6 +9,7 @@
 Cloudflare API features in Prestashop:
 
 - Clear Cloudflare Cache in the Prestashop admin
+- Hostname-specific cache purge (optional). If no hostname is configured, full cache purge is performed.
 
 ![Flush Cloudflare Cache](screenshot.png)
 
@@ -36,6 +37,7 @@ From the module manager, find the module and click on configure.
 | Field                | Description                                                                            | Required |
 |:---------------------|:---------------------------------------------------------------------------------------|----------|
 | Zone ID              | The website Zone ID                                                                    | Y        |
+| Hostname             | Specific hostname to purge (leave empty for full cache purge)                          | N        |
 | Authentication mode  | The authentication mode: API Token or Global API key                                   | Y        |
 | API Token *          | A valid token from your Cloudflare Account with permission on "Cache Purge" for "Zone" | Y        |
 | Global API Key       | The Cloudflare Global API key                                                          | Y        |
