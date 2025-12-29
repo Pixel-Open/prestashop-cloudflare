@@ -102,11 +102,14 @@ class Api
             return $this->internalError('The Zone ID parameter is missing in the module configuration');
         }
 
+        $hostname = $this->config->getHostname();
+        $body = $hostname ? ['hosts' => [$hostname]] : ['purge_everything' => true];
+
         try {
             return $this->execute(
                 'POST',
                 'zones/' . $this->config->getZoneId() . '/purge_cache',
-                ['purge_everything' => true]
+                $body
             );
         } catch (Throwable $throwable) {
             return $this->internalError($throwable->getMessage());

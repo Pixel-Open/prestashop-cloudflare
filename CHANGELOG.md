@@ -1,3 +1,11 @@
+## 1.3.5
+
+- Add hostname-specific cache purge option
+
+## 1.3.0
+
+- Prestashop 9 compatibility
+
 ## 1.2.2
 
 - Deprecated Minify settings removed

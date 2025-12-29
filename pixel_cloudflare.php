@@ -20,7 +20,7 @@ class Pixel_cloudflare extends Module
     public function __construct()
     {
         $this->name = 'pixel_cloudflare';
-        $this->version = '1.3.0';
+        $this->version = '1.3.5';
         $this->author = 'Pixel Open';
         $this->tab = 'administration';
         $this->need_instance = 0;
@@ -177,6 +177,18 @@ class Pixel_cloudflare extends Module
                 'name'     => 'CLOUDFLARE_ZONE_ID',
                 'size'     => 20,
                 'required' => true,
+            ],
+            'CLOUDFLARE_HOSTNAME' => [
+                'type'     => 'text',
+                'label'    => $this->trans('Hostname to purge (optional)', [], 'Modules.Pixelcloudflare.Admin'),
+                'name'     => 'CLOUDFLARE_HOSTNAME',
+                'size'     => 50,
+                'required' => false,
+                'desc'     => $this->trans(
+                    'Leave empty for full cache purge. Example: www.example.com',
+                    [],
+                    'Modules.Pixelcloudflare.Admin'
+                ),
             ],
             'CLOUDFLARE_API_AUTHENTICATION_MODE' => [
                 'type'     => 'select',

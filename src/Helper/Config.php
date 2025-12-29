@@ -71,4 +71,14 @@ class Config
     {
         return Configuration::get('CLOUDFLARE_ACCOUNT_EMAIL') ?: null;
     }
+
+    /**
+     * Retrieve Hostname to purge
+     *
+     * @return string|null
+     */
+    public function getHostname(): ?string
+    {
+        return Configuration::get('CLOUDFLARE_HOSTNAME') ?: null;
+    }
 }
