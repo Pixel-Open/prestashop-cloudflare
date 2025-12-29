@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="pixel_cloudflare" source-language="en-US" target-language="de-DE" datatype="plaintext">
+    <body>
+      <trans-unit id="1" resname="Cloudflare">
+        <source>Cloudflare</source>
+        <target>Cloudflare</target>
+      </trans-unit>
+      <trans-unit id="2" resname="Cloudflare API features in Prestashop.">
+        <source>Cloudflare API features in Prestashop.</source>
+        <target>Cloudflare API-Funktionen in PrestaShop.</target>
+      </trans-unit>
+      <trans-unit id="3" resname="Cloudflare cache has been flushed">
+        <source>Cloudflare cache has been flushed</source>
+        <target>Cloudflare-Cache wurde geleert</target>
+      </trans-unit>
+      <trans-unit id="4" resname="Unable to clear Cloudflare cache">
+        <source>Unable to clear Cloudflare cache</source>
+        <target>Cloudflare-Cache konnte nicht geleert werden</target>
+      </trans-unit>
+      <trans-unit id="5" resname="Clear Cloudflare Cache">
+        <source>Clear Cloudflare Cache</source>
+        <target>Cloudflare-Cache leeren</target>
+      </trans-unit>
+      <trans-unit id="6" resname="Zone ID">
+        <source>Zone ID</source>
+        <target>Zonen-ID</target>
+      </trans-unit>
+      <trans-unit id="7" resname="Hostname to purge (optional)">
+        <source>Hostname to purge (optional)</source>
+        <target>Hostname zum Bereinigen (optional)</target>
+      </trans-unit>
+      <trans-unit id="8" resname="Leave empty for full cache purge. Example: www.example.com">
+        <source>Leave empty for full cache purge. Example: www.example.com</source>
+        <target>Leer lassen für vollständige Cache-Bereinigung. Beispiel: www.example.com</target>
+      </trans-unit>
+      <trans-unit id="9" resname="Authentication mode">
+        <source>Authentication mode</source>
+        <target>Authentifizierungsmodus</target>
+      </trans-unit>
+      <trans-unit id="10" resname="API Token">
+        <source>API Token</source>
+        <target>API-Token</target>
+      </trans-unit>
+      <trans-unit id="11" resname="Global API Key">
+        <source>Global API Key</source>
+        <target>Globaler API-Schlüssel</target>
+      </trans-unit>
+      <trans-unit id="12" resname="A valid token from your Cloudflare Account with permission on &quot;Cache Purge&quot; for &quot;Zone&quot;.">
+        <source>A valid token from your Cloudflare Account with permission on "Cache Purge" for "Zone".</source>
+        <target>Ein gültiges Token aus Ihrem Cloudflare-Konto mit der Berechtigung "Cache Purge" für "Zone".</target>
+      </trans-unit>
+      <trans-unit id="13" resname="Account Email">
+        <source>Account Email</source>
+        <target>Konto-E-Mail</target>
+      </trans-unit>
+      <trans-unit id="14" resname="%field% is empty">
+        <source>%field% is empty</source>
+        <target>Das Feld %field% ist leer</target>
+      </trans-unit>
+      <trans-unit id="15" resname="Settings updated">
+        <source>Settings updated</source>
+        <target>Einstellungen aktualisiert</target>
+      </trans-unit>
+      <trans-unit id="16" resname="Settings">
+        <source>Settings</source>
+        <target>Einstellungen</target>
+      </trans-unit>
+      <trans-unit id="17" resname="Save">
+        <source>Save</source>
+        <target>Speichern</target>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

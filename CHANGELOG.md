@@ -1,3 +1,7 @@
+## 1.3.6
+
+- Add translations (French, Spanish, German, Italian)
+
 ## 1.3.5
 
 - Add hostname-specific cache purge option
