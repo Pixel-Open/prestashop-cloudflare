@@ -1,3 +1,11 @@
+## 1.3.1
+
+- Fix module config redirect URL for Nginx compatibility
+
+## 1.3.0
+
+- Compatibility with Prestashop 9
+
 ## 1.2.2
 
 - Deprecated Minify settings removed
