@@ -17,7 +17,7 @@ class Pixel_cloudflare extends Module
     public function __construct()
     {
         $this->name = 'pixel_cloudflare';
-        $this->version = '1.3.1';
+        $this->version = '1.3.2';
         $this->author = 'Pixel Open';
         $this->tab = 'administration';
         $this->need_instance = 0;

@@ -1,3 +1,7 @@
+## 1.3.2
+
+- Remove unused Cloudflare API service call in getContent/displayForm causing a "non-existent service" error in some environments
+
 ## 1.3.1
 
 - Fix module config redirect URL for Nginx compatibility
