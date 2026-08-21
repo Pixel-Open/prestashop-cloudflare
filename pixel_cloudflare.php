@@ -9,9 +9,6 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
-use Pixel\Module\Cloudflare\Model\Api;
-use PrestaShop\PrestaShop\Core\Exception\ContainerNotFoundException;
-
 class Pixel_cloudflare extends Module
 {
     /**
@@ -231,14 +228,10 @@ class Pixel_cloudflare extends Module
      * This method handles the module's configuration page
      *
      * @return string
-     * @throws ContainerNotFoundException
      */
     public function getContent(): string
     {
         $output = '';
-
-        /** @var Api $api */
-        $api = $this->getContainer()->get('pixel.cloudflare.api');
 
         if (Tools::isSubmit('submit' . $this->name)) {
             foreach ($this->getConfigFields() as $code => $field) {
@@ -266,7 +259,6 @@ class Pixel_cloudflare extends Module
      * Builds the configuration form
      *
      * @return string
-     * @throws ContainerNotFoundException
      */
     public function displayForm(): string
     {
@@ -292,9 +284,6 @@ class Pixel_cloudflare extends Module
         $helper->submit_action = 'submit' . $this->name;
 
         $helper->default_form_language = (int) Configuration::get('PS_LANG_DEFAULT');
-
-        /** @var Api $api */
-        $api = $this->getContainer()->get('pixel.cloudflare.api');
 
         foreach ($this->getConfigFields() as $code => $field) {
             // Prestashop settings
