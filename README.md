@@ -80,8 +80,6 @@ Default excluded paths:
 
 Adapt them to the payment modules installed on the shop (the URL path is case-insensitive, `*` also matches the language code, e.g. `/fr/module/...`).
 
-![Flush Cloudflare Cache](token.png)
-
 ## Under Attack mode
 
 When enabled, every visitor goes through a Cloudflare check page (a few seconds) before accessing the site, which blocks the massive traffic of bots that do not run JavaScript. To be used only during an attack, for a limited time.
