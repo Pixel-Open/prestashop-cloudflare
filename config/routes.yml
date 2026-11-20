@@ -3,3 +3,25 @@ admin_cloudflare_clear_cache:
   methods: [GET]
   defaults:
     _controller: 'pixel.cloudflare.controller::clearCacheAction'
+
+admin_cloudflare_under_attack:
+  path: /cloudflare/under-attack
+  methods: [GET]
+  defaults:
+    _controller: 'pixel.cloudflare.under_attack.controller::indexAction'
+    _legacy_controller: 'AdminPixelCloudflareUnderAttack'
+    _legacy_link: 'AdminPixelCloudflareUnderAttack'
+
+admin_cloudflare_under_attack_enable:
+  path: /cloudflare/under-attack/enable
+  methods: [POST]
+  defaults:
+    _controller: 'pixel.cloudflare.under_attack.controller::enableAction'
+    _legacy_controller: 'AdminPixelCloudflareUnderAttack'
+
+admin_cloudflare_under_attack_disable:
+  path: /cloudflare/under-attack/disable
+  methods: [POST]
+  defaults:
+    _controller: 'pixel.cloudflare.under_attack.controller::disableAction'
+    _legacy_controller: 'AdminPixelCloudflareUnderAttack'

@@ -1,3 +1,7 @@
+## 1.4.0
+
+- Add the temporary Cloudflare "I'm Under Attack" mode
+
 ## 1.3.2
 
 - Remove unused Cloudflare API service call in getContent/displayForm causing a "non-existent service" error in some environments

@@ -9,15 +9,23 @@ if (!defined('_PS_VERSION_')) {
     exit;
 }
 
+require_once __DIR__ . '/vendor/autoload.php';
+
+use Pixel\Module\Cloudflare\Exception\ApiException;
+use Pixel\Module\Cloudflare\Helper\Config;
+use Pixel\Module\Cloudflare\Model\UnderAttack\ExpressionBuilder;
+
 class Pixel_cloudflare extends Module
 {
+    const UNDER_ATTACK_TAB = 'AdminPixelCloudflareUnderAttack';
+
     /**
      * Module's constructor.
      */
     public function __construct()
     {
         $this->name = 'pixel_cloudflare';
-        $this->version = '1.3.2';
+        $this->version = '1.4.0';
         $this->author = 'Pixel Open';
         $this->tab = 'administration';
         $this->need_instance = 0;
@@ -36,8 +44,25 @@ class Pixel_cloudflare extends Module
             'Modules.Pixelcloudflare.Admin'
         );
         $this->ps_versions_compliancy = [
-            'min' => '1.7.6.0',
+            'min' => '1.7.7.0',
             'max' => _PS_VERSION_,
+        ];
+
+        $tabNames = [];
+        foreach (Language::getLanguages(false) as $lang) {
+            $tabNames[$lang['locale']] = 'Cloudflare Under Attack';
+        }
+
+        $this->tabs = [
+            [
+                'route_name' => 'admin_cloudflare_under_attack',
+                'class_name' => self::UNDER_ATTACK_TAB,
+                'visible' => true,
+                'name' => $tabNames,
+                'parent_class_name' => 'AdminAdvancedParameters',
+                'wording' => 'Cloudflare Under Attack',
+                'wording_domain' => 'Modules.Pixelcloudflare.Admin',
+            ],
         ];
     }
 
@@ -53,8 +78,52 @@ class Pixel_cloudflare extends Module
     public function install(): bool
     {
         return parent::install() &&
+            $this->registerUnderAttackConfigurations() &&
             $this->registerHook('displayDashboardToolbarTopMenu') &&
             $this->registerHook('actionClearCompileCache');
+    }
+
+    /**
+     * Add the Under Attack mode default configurations, without overriding the existing values
+     *
+     * @return bool
+     */
+    public function registerUnderAttackConfigurations(): bool
+    {
+        foreach (Config::getUnderAttackDefaults() as $key => $value) {
+            if (Configuration::hasKey($key)) {
+                continue;
+            }
+            Configuration::updateValue($key, $value);
+        }
+
+        return true;
+    }
+
+    /**
+     * Add the "Advanced Parameters > Cloudflare Under Attack" tab if missing (module upgrade)
+     *
+     * @return bool
+     */
+    public function installUnderAttackTab(): bool
+    {
+        if (Tab::getIdFromClassName(self::UNDER_ATTACK_TAB)) {
+            return true;
+        }
+
+        $tab = new Tab();
+        $tab->class_name = self::UNDER_ATTACK_TAB;
+        $tab->route_name = 'admin_cloudflare_under_attack';
+        $tab->module = $this->name;
+        $tab->active = true;
+        $tab->id_parent = (int)Tab::getIdFromClassName('AdminAdvancedParameters');
+        $tab->wording = 'Cloudflare Under Attack';
+        $tab->wording_domain = 'Modules.Pixelcloudflare.Admin';
+        foreach (Language::getLanguages(false) as $lang) {
+            $tab->name[(int)$lang['id_lang']] = 'Cloudflare Under Attack';
+        }
+
+        return (bool)$tab->add();
     }
 
     /**
@@ -202,7 +271,7 @@ class Pixel_cloudflare extends Module
                 'size'     => 20,
                 'required' => false,
                 'desc'     => $this->trans(
-                    'A valid token from your Cloudflare Account with permission on "Cache Purge" for "Zone".',
+                    'A valid token from your Cloudflare Account restricted to the zone, with the permissions "Zone: Read", "Cache Purge: Purge" and "Config Rules: Edit" (Under Attack mode).',
                     [],
                     'Modules.Pixelcloudflare.Admin'
                 ),
@@ -225,6 +294,161 @@ class Pixel_cloudflare extends Module
     }
 
     /**
+     * Retrieve Under Attack mode config fields
+     *
+     * @return array[]
+     */
+    protected function getUnderAttackConfigFields(): array
+    {
+        return [
+            Config::UNDER_ATTACK_DEFAULT_DURATION => [
+                'type'     => 'text',
+                'label'    => $this->trans('Default duration (minutes)', [], 'Modules.Pixelcloudflare.Admin'),
+                'name'     => Config::UNDER_ATTACK_DEFAULT_DURATION,
+                'class'    => 'fixed-width-sm',
+                'required' => true,
+            ],
+            Config::UNDER_ATTACK_MAX_DURATION => [
+                'type'     => 'text',
+                'label'    => $this->trans('Maximum duration (minutes)', [], 'Modules.Pixelcloudflare.Admin'),
+                'name'     => Config::UNDER_ATTACK_MAX_DURATION,
+                'class'    => 'fixed-width-sm',
+                'required' => true,
+                'desc'     => $this->trans(
+                    'The mode is automatically disabled at the end of the chosen duration (checked every 5 minutes by the cron).',
+                    [],
+                    'Modules.Pixelcloudflare.Admin'
+                ),
+            ],
+            Config::UNDER_ATTACK_ALLOW_KNOWN_BOTS => [
+                'type'     => 'switch',
+                'label'    => $this->trans('Allow known bots', [], 'Modules.Pixelcloudflare.Admin'),
+                'name'     => Config::UNDER_ATTACK_ALLOW_KNOWN_BOTS,
+                'required' => false,
+                'is_bool'  => true,
+                'values'   => [
+                    [
+                        'id'    => 'active_on',
+                        'value' => 1,
+                        'label' => $this->trans('Yes', [], 'Admin.Global'),
+                    ],
+                    [
+                        'id'    => 'active_off',
+                        'value' => 0,
+                        'label' => $this->trans('No', [], 'Admin.Global'),
+                    ],
+                ],
+                'desc'     => $this->trans(
+                    'Never challenge the bots known by Cloudflare (Googlebot, Bingbot...), to avoid any impact on search engine indexing. Not available on the Cloudflare Free plan: the activation is refused by Cloudflare.',
+                    [],
+                    'Modules.Pixelcloudflare.Admin'
+                ),
+            ],
+            Config::UNDER_ATTACK_EXCLUDED_PATHS => [
+                'type'     => 'textarea',
+                'label'    => $this->trans('Excluded paths', [], 'Modules.Pixelcloudflare.Admin'),
+                'name'     => Config::UNDER_ATTACK_EXCLUDED_PATHS,
+                'rows'     => 8,
+                'required' => false,
+                'desc'     => $this->trans(
+                    'One path per line, never challenged (server-to-server calls: webservice, payment notifications...). * matches any characters, e.g. /api/* or */module/*/*webhook* (with or without language code). Allowed characters: letters, digits, / _ - . *',
+                    [],
+                    'Modules.Pixelcloudflare.Admin'
+                ),
+            ],
+        ];
+    }
+
+    /**
+     * Validate and normalize the Under Attack mode values
+     *
+     * @return array<string, string> Config key => value
+     * @throws InvalidArgumentException
+     */
+    protected function getUnderAttackSubmittedValues(): array
+    {
+        $fields = $this->getUnderAttackConfigFields();
+        $values = [];
+
+        foreach ([Config::UNDER_ATTACK_DEFAULT_DURATION, Config::UNDER_ATTACK_MAX_DURATION] as $key) {
+            $value = trim((string)Tools::getValue($key));
+            if (!ctype_digit($value) || (int)$value < 1) {
+                throw new InvalidArgumentException(
+                    $this->trans(
+                        '%field% must be a number greater than 0',
+                        ['%field%' => $fields[$key]['label']],
+                        'Modules.Pixelcloudflare.Admin'
+                    )
+                );
+            }
+            $values[$key] = (string)(int)$value;
+        }
+        if ((int)$values[Config::UNDER_ATTACK_DEFAULT_DURATION] > (int)$values[Config::UNDER_ATTACK_MAX_DURATION]) {
+            throw new InvalidArgumentException(
+                $this->trans(
+                    'The default duration must be lower than or equal to the maximum duration',
+                    [],
+                    'Modules.Pixelcloudflare.Admin'
+                )
+            );
+        }
+
+        $values[Config::UNDER_ATTACK_ALLOW_KNOWN_BOTS] = Tools::getValue(Config::UNDER_ATTACK_ALLOW_KNOWN_BOTS) ? '1' : '0';
+
+        $paths = Config::splitPaths((string)Tools::getValue(Config::UNDER_ATTACK_EXCLUDED_PATHS));
+        foreach ($paths as $path) {
+            if (!ExpressionBuilder::isValidPath($path)) {
+                throw new InvalidArgumentException(
+                    $this->trans(
+                        'Invalid excluded path "%path%": only letters, digits and / _ - . * are allowed.',
+                        ['%path%' => $path],
+                        'Modules.Pixelcloudflare.Admin'
+                    )
+                );
+            }
+        }
+        $values[Config::UNDER_ATTACK_EXCLUDED_PATHS] = implode("\n", $paths);
+
+        return $values;
+    }
+
+    /**
+     * Check the API access and push the excluded paths to the existing Under Attack rule
+     *
+     * @return string
+     */
+    protected function syncUnderAttackRule(): string
+    {
+        if (!$this->get('pixel.cloudflare.config')->isApiConfigured()) {
+            return '';
+        }
+
+        try {
+            $ruleManager = $this->get('pixel.cloudflare.under_attack.rule_manager');
+            $output = $this->displayConfirmation(
+                $this->trans(
+                    'Cloudflare API access checked (zone %zone%).',
+                    ['%zone%' => $ruleManager->checkAccess()],
+                    'Modules.Pixelcloudflare.Admin'
+                )
+            );
+            if ($ruleManager->syncExpression()) {
+                $output .= $this->displayConfirmation(
+                    $this->trans(
+                        'The excluded paths have been updated on the Cloudflare rule.',
+                        [],
+                        'Modules.Pixelcloudflare.Admin'
+                    )
+                );
+            }
+
+            return $output;
+        } catch (ApiException $exception) {
+            return $this->displayError($exception->getMessage());
+        }
+    }
+
+    /**
      * This method handles the module's configuration page
      *
      * @return string
@@ -234,6 +458,12 @@ class Pixel_cloudflare extends Module
         $output = '';
 
         if (Tools::isSubmit('submit' . $this->name)) {
+            try {
+                $underAttackValues = $this->getUnderAttackSubmittedValues();
+            } catch (InvalidArgumentException $exception) {
+                return $this->displayError($exception->getMessage()) . $this->displayForm();
+            }
+
             foreach ($this->getConfigFields() as $code => $field) {
                 $value = Tools::getValue($code);
 
@@ -248,8 +478,12 @@ class Pixel_cloudflare extends Module
                 }
                 Configuration::updateValue($code, $value);
             }
+            foreach ($underAttackValues as $code => $value) {
+                Configuration::updateValue($code, $value);
+            }
 
             $output = $this->displayConfirmation($this->trans('Settings updated', [], 'Modules.Pixelcloudflare.Admin'));
+            $output .= $this->syncUnderAttackRule();
         }
 
         return $output . $this->displayForm();
@@ -274,6 +508,24 @@ class Pixel_cloudflare extends Module
                 ],
             ],
         ];
+        $underAttackForm = [
+            'form' => [
+                'legend' => [
+                    'title' => $this->trans('Under Attack mode', [], 'Modules.Pixelcloudflare.Admin'),
+                    'icon'  => 'icon-shield',
+                ],
+                'description' => $this->trans(
+                    'Enable the mode from Advanced Parameters > Cloudflare Under Attack, or with the pixel_cloudflare:under-attack:enable command.',
+                    [],
+                    'Modules.Pixelcloudflare.Admin'
+                ),
+                'input' => $this->getUnderAttackConfigFields(),
+                'submit' => [
+                    'title' => $this->trans('Save', [], 'Modules.Pixelcloudflare.Admin'),
+                    'class' => 'btn btn-default pull-right',
+                ],
+            ],
+        ];
 
         $helper = new HelperForm();
 
@@ -285,7 +537,7 @@ class Pixel_cloudflare extends Module
 
         $helper->default_form_language = (int) Configuration::get('PS_LANG_DEFAULT');
 
-        foreach ($this->getConfigFields() as $code => $field) {
+        foreach (array_merge($this->getConfigFields(), $this->getUnderAttackConfigFields()) as $code => $field) {
             // Prestashop settings
             $value = Tools::getValue($code, Configuration::get($code));
 
@@ -296,7 +548,7 @@ class Pixel_cloudflare extends Module
             $helper->fields_value[$field['name']] = $value;
         }
 
-        $form = $helper->generateForm([$form]);
+        $form = $helper->generateForm([$form, $underAttackForm]);
         $script = $this->get('twig')->render('@Modules/pixel_cloudflare/views/templates/admin/config/js.twig');
 
         return $form . $script;
@@ -309,9 +561,10 @@ class Pixel_cloudflare extends Module
      */
     protected function deleteConfigurations(): bool
     {
-        foreach ($this->getConfigFields() as $key => $options) {
+        foreach (array_merge($this->getConfigFields(), $this->getUnderAttackConfigFields()) as $key => $options) {
             Configuration::deleteByName($key);
         }
+        Configuration::deleteByName(Config::UNDER_ATTACK_STATE);
 
         return true;
     }

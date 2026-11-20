@@ -1,0 +1,262 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<xliff xmlns="urn:oasis:names:tc:xliff:document:1.2" version="1.2">
+  <file original="pixel_cloudflare" source-language="en-US" target-language="fr-FR" datatype="plaintext">
+    <body>
+      <trans-unit id="3f07179a07b2a7661e37a3fd0e652a07">
+        <source>Cloudflare</source>
+        <target>Cloudflare</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="5aa08e2b7afb652d5de7eef649b5919e">
+        <source>Cloudflare API features in Prestashop.</source>
+        <target>Fonctionnalités de l&apos;API Cloudflare dans Prestashop.</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="cb14f126613297f48d6b6f73a0ddf23c">
+        <source>Cloudflare cache has been flushed</source>
+        <target>Le cache Cloudflare a été vidé</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="4aed65736ffad84e86b35e9c0b7d16bd">
+        <source>Unable to clear Cloudflare cache</source>
+        <target>Impossible de vider le cache Cloudflare</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="e8046b2c96014ed5fa11f2f15f63486e">
+        <source>Clear Cloudflare Cache</source>
+        <target>Vider le cache Cloudflare</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="ca7086c6ed2859db76f290c9cc1ed037">
+        <source>Zone ID</source>
+        <target>ID de zone</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="8471bcaa60af0da808996bbee1cb49ed">
+        <source>Authentication mode</source>
+        <target>Mode d&apos;authentification</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="5161b4f9ce9a8b7d966e8bf3c049f6f3">
+        <source>API Token</source>
+        <target>Token API</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="31bfd213f6ca9ab6e440f614d31c2a61">
+        <source>Global API Key</source>
+        <target>Clé API globale</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="275f5257af70b08ed6def799bfa214b3">
+        <source>Account Email</source>
+        <target>E-mail du compte</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="a29ce6d0a33eb6b8065139a6492bb84f">
+        <source>A valid token from your Cloudflare Account restricted to the zone, with the permissions &quot;Zone: Read&quot;, &quot;Cache Purge: Purge&quot; and &quot;Config Rules: Edit&quot; (Under Attack mode).</source>
+        <target>Un token valide de votre compte Cloudflare limité à la zone, avec les permissions « Zone : Read », « Cache Purge : Purge » et « Config Rules : Edit » (mode Under Attack).</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="e124ed6b3e0bd38844ea7e1b325bbd3e">
+        <source>%field% is empty</source>
+        <target>%field% est vide</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="c888438d14855d7d96a2724ee9c306bd">
+        <source>Settings updated</source>
+        <target>Paramètres mis à jour</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="f4f70727dc34561dfde1a3c529b6205c">
+        <source>Settings</source>
+        <target>Paramètres</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="c9cc8cce247e49bae79f15173ce97354">
+        <source>Save</source>
+        <target>Enregistrer</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="882cb78c0065678a05e758b55ed0cf5c">
+        <source>Cloudflare Under Attack</source>
+        <target>Cloudflare Under Attack</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="140006f05dda5fac6f18a9e6a93ee520">
+        <source>Under Attack mode</source>
+        <target>Mode Under Attack</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="de6af704b9a445212fa32258eafd79cd">
+        <source>Default duration (minutes)</source>
+        <target>Durée par défaut (minutes)</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="04fb473ca87b7d1ef99c22b7f1511d4c">
+        <source>Maximum duration (minutes)</source>
+        <target>Durée maximale (minutes)</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="e823b58df0e0c618ecf39564cf46ad3f">
+        <source>The mode is automatically disabled at the end of the chosen duration (checked every 5 minutes by the cron).</source>
+        <target>Le mode est désactivé automatiquement à la fin de la durée choisie (vérification toutes les 5 minutes par le cron).</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="370ada1424af748af27f0757cdb3cf3a">
+        <source>Allow known bots</source>
+        <target>Laisser passer les robots connus</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="6b76994806a23f2ebb8a1602fd58ede5">
+        <source>Never challenge the bots known by Cloudflare (Googlebot, Bingbot...), to avoid any impact on search engine indexing. Not available on the Cloudflare Free plan: the activation is refused by Cloudflare.</source>
+        <target>Ne jamais soumettre à la vérification les robots connus de Cloudflare (Googlebot, Bingbot...), pour ne pas impacter le référencement. Non disponible avec l&apos;offre Cloudflare Free : l&apos;activation est refusée par Cloudflare.</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="867fc450d6b860a8ba6df2ef2cea23c4">
+        <source>Excluded paths</source>
+        <target>Chemins exclus</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="c0c1782de05b63f770acc1c2c5a087b9">
+        <source>One path per line, never challenged (server-to-server calls: webservice, payment notifications...). * matches any characters, e.g. /api/* or */module/*/*webhook* (with or without language code). Allowed characters: letters, digits, / _ - . *</source>
+        <target>Un chemin par ligne, jamais soumis à la vérification (appels serveur à serveur : webservice, notifications de paiement...). * correspond à n&apos;importe quels caractères, ex. /api/* ou */module/*/*webhook* (avec ou sans code langue). Caractères autorisés : lettres, chiffres, / _ - . *</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="4d31e4d07d783eaf2eb05f364214e299">
+        <source>%field% must be a number greater than 0</source>
+        <target>%field% doit être un nombre supérieur à 0</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="e5b4fab1ece0e0e495fe3ba6b3ea7037">
+        <source>The default duration must be lower than or equal to the maximum duration</source>
+        <target>La durée par défaut doit être inférieure ou égale à la durée maximale</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="4d6ab18101e394a943c8cccbd014c922">
+        <source>Invalid excluded path &quot;%path%&quot;: only letters, digits and / _ - . * are allowed.</source>
+        <target>Chemin exclu invalide « %path% » : seuls les lettres, chiffres et / _ - . * sont autorisés.</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="2917bff72d31b43d2a00a3676ae797e7">
+        <source>Cloudflare API access checked (zone %zone%).</source>
+        <target>Accès à l&apos;API Cloudflare vérifié (zone %zone%).</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="4201b414f6ca1258d67e58fb63b559b8">
+        <source>The excluded paths have been updated on the Cloudflare rule.</source>
+        <target>Les chemins exclus ont été mis à jour sur la règle Cloudflare.</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="8c32de62b1700ac8275727510835c922">
+        <source>Enable the mode from Advanced Parameters &gt; Cloudflare Under Attack, or with the pixel_cloudflare:under-attack:enable command.</source>
+        <target>Activez le mode depuis Paramètres avancés &gt; Cloudflare Under Attack, ou avec la commande pixel_cloudflare:under-attack:enable.</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="c3a913b9de0dafcfbbefacfe9fd3485a">
+        <source>The duration must be between 1 and %max% minutes.</source>
+        <target>La durée doit être comprise entre 1 et %max% minutes.</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="be8d8f79e0b34fd941e037739375431d">
+        <source>Cloudflare - Under Attack mode</source>
+        <target>Cloudflare - Mode Under Attack</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="4820f2b28f4c418261e7907cee921155">
+        <source>Under Attack mode enabled, automatically disabled on %date%.</source>
+        <target>Mode Under Attack activé, désactivation automatique le %date%.</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="2c55c7911972de54b19f92bdc359b49a">
+        <source>Under Attack mode disabled.</source>
+        <target>Mode Under Attack désactivé.</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="3ad9de647b2fc2ff53241f9ca7f81784">
+        <source>%count% h</source>
+        <target>%count% h</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="24ad57b471529c66f83e0b8374703051">
+        <source>%count% min</source>
+        <target>%count% min</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="ddded58f33d4a7785c5f308171dad8ad">
+        <source>The Cloudflare API is not configured.</source>
+        <target>L&apos;API Cloudflare n&apos;est pas configurée.</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="f1206f9fadc5ce41694f69129aecac26">
+        <source>Configure</source>
+        <target>Configurer</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="5ac66bd8c67ff7b4dd062df1d69dc3af">
+        <source>Every visitor goes through a Cloudflare check page (a few seconds) before accessing the site, which blocks the massive traffic of bots that do not run JavaScript. To be used only during an attack.</source>
+        <target>Chaque visiteur passe par une page de vérification Cloudflare (quelques secondes) avant d&apos;accéder au site, ce qui bloque le trafic massif des bots qui n&apos;exécutent pas JavaScript. À utiliser uniquement pendant une attaque.</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="5bc3e9b04de8a2a2d35412b98b328493">
+        <source>Under Attack mode is ENABLED.</source>
+        <target>Le mode Under Attack est ACTIVÉ.</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="2fb0b8759c2750eafe4b7c0d2a5ba553">
+        <source>Enabled by %author% on %from%, automatically disabled on %until%.</source>
+        <target>Activé par %author% le %from%, désactivation automatique le %until%.</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="7857289d780178821c542df4afea0914">
+        <source>Enabled from the Cloudflare dashboard: no automatic deactivation.</source>
+        <target>Activé depuis le tableau de bord Cloudflare : pas de désactivation automatique.</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="de3e62d8ec4a1bb7ae5a9f612c256202">
+        <source>The end date is passed: check that the cron is running.</source>
+        <target>La date de fin est dépassée : vérifier que le cron tourne.</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="7668785e5457364728994ffc101cde49">
+        <source>Under Attack mode is disabled.</source>
+        <target>Le mode Under Attack est désactivé.</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="e02d2ae03de9d493df2b6b2d2813d302">
+        <source>Duration</source>
+        <target>Durée</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="6f7f85598e4dc5ed3892737e51414e7d">
+        <source>Extend / restart</source>
+        <target>Prolonger / relancer</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="2faec1f9f8cc7f8f40d521c4dd574f49">
+        <source>Enable</source>
+        <target>Activer</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="7d226b54cb66e19e50507c11fd9f04ff">
+        <source>Disable now</source>
+        <target>Désactiver maintenant</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="73cf001a3b2cdd930f4648fb7b273912">
+        <source>These paths are never challenged (server-to-server calls such as the webservice or payment notifications):</source>
+        <target>Ces chemins ne sont jamais soumis à la vérification (appels serveur à serveur comme le webservice ou les notifications de paiement) :</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="79a0f36b1e7184a8a69e28b0c92ab561">
+        <source>Known bots (search engines...) are never challenged.</source>
+        <target>Les robots connus (moteurs de recherche...) ne sont jamais soumis à la vérification.</target>
+        <note>Line: </note>
+      </trans-unit>
+      <trans-unit id="e39cb52ccbca9ad3321b9f695ffee48a">
+        <source>Edit the configuration</source>
+        <target>Modifier la configuration</target>
+        <note>Line: </note>
+      </trans-unit>
+    </body>
+  </file>
+</xliff>

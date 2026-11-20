@@ -5,8 +5,16 @@ services:
       - '@pixel.cloudflare.api'
     public: true
 
+  pixel.cloudflare.under_attack.controller:
+    class: 'Pixel\Module\Cloudflare\Controller\Admin\UnderAttackController'
+    arguments:
+      - '@pixel.cloudflare.under_attack.service'
+      - '@pixel.cloudflare.config'
+    public: true
+
   pixel.cloudflare.config:
     class: 'Pixel\Module\Cloudflare\Helper\Config'
+    public: true
 
   pixel.cloudflare.api:
     class: 'Pixel\Module\Cloudflare\Model\Api'
@@ -17,3 +25,57 @@ services:
 
   symfony.component.http.client.curl:
     class: 'Symfony\Component\HttpClient\CurlHttpClient'
+
+  # Under Attack mode
+  pixel.cloudflare.under_attack.expression_builder:
+    class: 'Pixel\Module\Cloudflare\Model\UnderAttack\ExpressionBuilder'
+
+  pixel.cloudflare.under_attack.state:
+    class: 'Pixel\Module\Cloudflare\Model\UnderAttack\State'
+
+  pixel.cloudflare.under_attack.rule_manager:
+    class: 'Pixel\Module\Cloudflare\Model\UnderAttack\RuleManager'
+    arguments:
+      - '@pixel.cloudflare.api'
+      - '@pixel.cloudflare.config'
+      - '@pixel.cloudflare.under_attack.expression_builder'
+    public: true
+
+  pixel.cloudflare.under_attack.service:
+    class: 'Pixel\Module\Cloudflare\Model\UnderAttack\Service'
+    arguments:
+      - '@pixel.cloudflare.under_attack.rule_manager'
+      - '@pixel.cloudflare.under_attack.state'
+      - '@pixel.cloudflare.config'
+    public: true
+
+  # Console commands
+  pixel.cloudflare.command.under_attack.enable:
+    class: 'Pixel\Module\Cloudflare\Command\UnderAttack\EnableCommand'
+    arguments:
+      - '@pixel.cloudflare.under_attack.service'
+      - '@pixel.cloudflare.config'
+    tags:
+      - { name: 'console.command' }
+
+  pixel.cloudflare.command.under_attack.disable:
+    class: 'Pixel\Module\Cloudflare\Command\UnderAttack\DisableCommand'
+    arguments:
+      - '@pixel.cloudflare.under_attack.service'
+    tags:
+      - { name: 'console.command' }
+
+  pixel.cloudflare.command.under_attack.status:
+    class: 'Pixel\Module\Cloudflare\Command\UnderAttack\StatusCommand'
+    arguments:
+      - '@pixel.cloudflare.under_attack.service'
+      - '@pixel.cloudflare.config'
+    tags:
+      - { name: 'console.command' }
+
+  pixel.cloudflare.command.under_attack.expire:
+    class: 'Pixel\Module\Cloudflare\Command\UnderAttack\ExpireCommand'
+    arguments:
+      - '@pixel.cloudflare.under_attack.service'
+    tags:
+      - { name: 'console.command' }

@@ -1,0 +1,83 @@
+{% extends '@PrestaShop/Admin/layout.html.twig' %}
+
+{% set domain = 'Modules.Pixelcloudflare.Admin' %}
+
+{% block content %}
+<div class="card">
+    <h3 class="card-header">
+        <i class="material-icons">security</i>
+        {{ 'Under Attack mode'|trans({}, domain) }}
+    </h3>
+    <div class="card-body">
+        {% if not apiConfigured %}
+            <div class="alert alert-warning" role="alert">
+                <p class="alert-text">
+                    {{ 'The Cloudflare API is not configured.'|trans({}, domain) }}
+                    <a href="{{ configUrl }}">{{ 'Configure'|trans({}, domain) }}</a>
+                </p>
+            </div>
+        {% elseif error %}
+            <div class="alert alert-danger" role="alert">
+                <p class="alert-text">{{ error }}</p>
+            </div>
+        {% else %}
+            <p>
+                {{ 'Every visitor goes through a Cloudflare check page (a few seconds) before accessing the site, which blocks the massive traffic of bots that do not run JavaScript. To be used only during an attack.'|trans({}, domain) }}
+            </p>
+
+            {% if status.enabled %}
+                <div class="alert alert-warning" role="alert">
+                    <p class="alert-text">
+                        <strong>{{ 'Under Attack mode is ENABLED.'|trans({}, domain) }}</strong>
+                        {% if status.enabled_until is not null %}
+                            {{ 'Enabled by %author% on %from%, automatically disabled on %until%.'|trans({'%author%': status.enabled_by, '%from%': enabledAt, '%until%': enabledUntil}, domain) }}
+                        {% else %}
+                            {{ 'Enabled from the Cloudflare dashboard: no automatic deactivation.'|trans({}, domain) }}
+                        {% endif %}
+                    </p>
+                </div>
+                {% if overdue %}
+                    <div class="alert alert-danger" role="alert">
+                        <p class="alert-text">{{ 'The end date is passed: check that the cron is running.'|trans({}, domain) }}</p>
+                    </div>
+                {% endif %}
+            {% else %}
+                <div class="alert alert-success" role="alert">
+                    <p class="alert-text">{{ 'Under Attack mode is disabled.'|trans({}, domain) }}</p>
+                </div>
+            {% endif %}
+
+            {% if canUpdate %}
+                <form method="post" action="{{ path('admin_cloudflare_under_attack_enable') }}" class="form-inline mt-4">
+                    <label class="mr-2" for="pixel-cloudflare-duration">{{ 'Duration'|trans({}, domain) }}</label>
+                    <select class="custom-select mr-2" id="pixel-cloudflare-duration" name="duration">
+                        {% for minutes, label in durations %}
+                            <option value="{{ minutes }}"{% if minutes == defaultDuration %} selected{% endif %}>{{ label }}</option>
+                        {% endfor %}
+                    </select>
+                    <button type="submit" class="btn btn-primary">
+                        {{ status.enabled ? 'Extend / restart'|trans({}, domain) : 'Enable'|trans({}, domain) }}
+                    </button>
+                </form>
+
+                {% if status.enabled %}
+                    <form method="post" action="{{ path('admin_cloudflare_under_attack_disable') }}" class="mt-3">
+                        <button type="submit" class="btn btn-outline-secondary">
+                            {{ 'Disable now'|trans({}, domain) }}
+                        </button>
+                    </form>
+                {% endif %}
+            {% endif %}
+
+            <h4 class="mt-5">{{ 'Excluded paths'|trans({}, domain) }}</h4>
+            <p>{{ 'These paths are never challenged (server-to-server calls such as the webservice or payment notifications):'|trans({}, domain) }}</p>
+            {% if knownBotsAllowed %}
+                <p>{{ 'Known bots (search engines...) are never challenged.'|trans({}, domain) }}</p>
+            {% endif %}
+            <pre>{% for path in excludedPaths %}{{ path }}
+{% else %}-{% endfor %}</pre>
+            <p><a href="{{ configUrl }}">{{ 'Edit the configuration'|trans({}, domain) }}</a></p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}
